@@ -20,14 +20,6 @@ struct Frequency {
 		: str(str), freq(freq) {}
 };
 
-
-class Huffman {
-public:
+namespace huffman{
 	CharBitMap buildDictionary(std::istream& is);
-private:
-	std::unordered_map<std::string, freq_t> getFrequency(std::istream& is);
-	Node<Frequency> buildTree(std::unordered_map<std::string,freq_t> char_frequency);
-	CharBitMap helperBuildDictionary(const std::shared_ptr<const Node<Frequency>> cur_node,std::bitset<BITSET_SIZE> cur_bits) const;
-
-	static constexpr std::size_t CHUNK_SIZE = 1024;
-};
+}
