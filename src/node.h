@@ -4,6 +4,7 @@
 template<class T>
 class Node {
 public:
+	Node();
 	Node(T value);
 	Node(T value, T left, T right);
 
@@ -23,6 +24,10 @@ private:
 	std::shared_ptr<Node<T>> left = nullptr;
 	std::shared_ptr<Node<T>> right = nullptr;
 };
+
+template<class T>
+inline Node<T>::Node()
+	: value(T()) {}
 
 template<class T>
 inline Node<T>::Node(T value)

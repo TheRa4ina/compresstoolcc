@@ -7,20 +7,23 @@
 namespace {
 	std::unordered_map<std::string, freq_t> getFrequency(std::istream& is);
 	Node<Frequency> buildTree(std::unordered_map<std::string, freq_t> char_frequency);
-	CharBitMap helperBuildDictionary(const std::shared_ptr<const Node<Frequency>> cur_node, std::bitset<BITSET_SIZE> cur_bits);
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, std::bitset<BITSET_SIZE> cur_bits);
 }
 
+namespace huffman {
 /// <summary>
 /// Builds Huffman dictionary from istream
 /// </summary>
 /// <param name="is">input istream, of which build dictionary</param>
 /// <returns> map of chars to their bitset</returns>
-
-namespace huffman {
 	CharBitMap buildDictionary(std::istream& is)
 	{
-		Node<Frequency> root = buildTree(getFrequency(is));
-		CharBitMap dict = helperBuildDictionary(std::make_shared<Node<Frequency>>(root), 0);
+		std::unordered_map<std::string,freq_t> frequency_map = getFrequency(is);
+		auto root = buildTree(frequency_map);
+		CharBitMap dict;
+		if (root.getValue().freq != 0) {//if our tree is not empty
+			dict = helperBuildDictionary(root, 0);
+		}
 
 		return dict;
 	}
@@ -57,7 +60,9 @@ namespace {
 	/// <returns>top of huffman tree</returns>
 	Node<Frequency> buildTree(std::unordered_map<std::string, freq_t> char_frequency)
 	{
-
+		if (char_frequency.size() == 0) {
+			return {};
+		}
 		std::vector<Node<Frequency>> nodes;
 		for (const auto& pair : char_frequency)
 		{
@@ -93,24 +98,24 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(std::shared_ptr<const Node<Frequency>> cur_node, std::bitset<BITSET_SIZE> cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, std::bitset<BITSET_SIZE> cur_bits)
 	{
-		if (cur_node->isLeaf()) {
-			Frequency cur = cur_node->getValue();
+		if (cur_node.isLeaf()) {
+			Frequency cur = cur_node.getValue();
 			assert(cur.str.size() == 1);// leaf node is always supposed to be single char. That just how huffman works
 			return { {cur.str[0],cur_bits} };
 		}
 
 		CharBitMap dict;
 		cur_bits <<= 1;
-		auto left = cur_node->getLeft();
-		auto right = cur_node->getRight();
+		auto left = cur_node.getLeft();
+		auto right = cur_node.getRight();
 		if (left != nullptr) {
-			dict.merge(helperBuildDictionary(left, cur_bits));
+			dict.merge(helperBuildDictionary(*left, cur_bits));
 			cur_bits.flip(0);
 		}
 		if (right != nullptr) {
-			dict.merge(helperBuildDictionary(right, cur_bits));
+			dict.merge(helperBuildDictionary(*right, cur_bits));
 		}
 
 		return dict;

@@ -18,6 +18,10 @@ struct Frequency {
 	}
 	Frequency(const std::string str, const freq_t freq)
 		: str(str), freq(freq) {}
+	Frequency() {
+		str = "";
+		freq = 0;
+	}
 };
 
 namespace huffman{
