@@ -7,7 +7,7 @@
 namespace {
 	std::unordered_map<std::string, freq_t> getFrequency(std::istream& is);
 	Node<Frequency> buildTree(std::unordered_map<std::string, freq_t> char_frequency);
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, std::bitset<BITSET_SIZE> cur_bits);
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, bits_t cur_bits);
 }
 
 namespace huffman {
@@ -98,7 +98,7 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, std::bitset<BITSET_SIZE> cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, bits_t cur_bits)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();
@@ -112,7 +112,7 @@ namespace {
 		auto right = cur_node.getRight();
 		if (left != nullptr) {
 			dict.merge(helperBuildDictionary(*left, cur_bits));
-			cur_bits.flip(0);
+			cur_bits++;
 		}
 		if (right != nullptr) {
 			dict.merge(helperBuildDictionary(*right, cur_bits));
