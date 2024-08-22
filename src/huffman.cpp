@@ -5,9 +5,9 @@
 #include <cassert>
 
 namespace {
-	std::unordered_map<std::string, freq_t> getFrequency(std::istream& is);
-	Node<Frequency> buildTree(std::unordered_map<std::string, freq_t> char_frequency);
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, bits_t cur_bits);
+	std::unordered_map<std::string, FreqType> getFrequency(std::istream& is);
+	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency);
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits);
 }
 
 namespace huffman {
@@ -18,7 +18,7 @@ namespace huffman {
 /// <returns> map of chars to their bitset</returns>
 	CharBitMap buildDictionary(std::istream& is)
 	{
-		std::unordered_map<std::string,freq_t> frequency_map = getFrequency(is);
+		std::unordered_map<std::string,FreqType> frequency_map = getFrequency(is);
 		auto root = buildTree(frequency_map);
 		CharBitMap dict;
 		if (root.getValue().freq != 0) {//if our tree is not empty
@@ -37,9 +37,9 @@ namespace {
 	/// Returns pair with string instead of char, because more convinient to use in buildTree functon
 	/// </summary>
 	/// <returns>frequency map of every char.</returns>
-	std::unordered_map < std::string, freq_t > getFrequency(std::istream& is)
+	std::unordered_map < std::string, FreqType > getFrequency(std::istream& is)
 	{
-		std::unordered_map < std::string, freq_t > freq;
+		std::unordered_map < std::string, FreqType > freq;
 		char buffer[CHUNK_SIZE] = { 0 };
 		std::string ch;
 		while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
@@ -58,7 +58,7 @@ namespace {
 	/// </summary>
 	/// <param name="char_frequency">- used chars and their frequency</param>
 	/// <returns>top of huffman tree</returns>
-	Node<Frequency> buildTree(std::unordered_map<std::string, freq_t> char_frequency)
+	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency)
 	{
 		if (char_frequency.size() == 0) {
 			return {};
@@ -87,7 +87,7 @@ namespace {
 			Frequency second_freq = second.getValue();
 
 			std::string letters = first_freq.str + second_freq.str;
-			freq_t new_freq = first_freq.freq + second_freq.freq;
+			FreqType new_freq = first_freq.freq + second_freq.freq;
 			Node<Frequency> top(Frequency(letters, new_freq));
 			Node<Frequency> branch(top);
 			branch.setLeft(first);
@@ -98,7 +98,7 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, bits_t cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();

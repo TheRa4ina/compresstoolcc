@@ -4,19 +4,19 @@
 #include <bitset>
 #include "node.h"
 
-typedef uint32_t freq_t;
-typedef uint32_t bits_t;
-typedef std::unordered_map<char, bits_t> CharBitMap;
+typedef uint32_t FreqType;
+typedef uint32_t Bits;
+typedef std::unordered_map<char, Bits> CharBitMap;
 
 
 struct Frequency {
 	std::string str;
-	freq_t freq;
-	Frequency(const std::pair<std::string, freq_t>& pair) {
+	FreqType freq;
+	Frequency(const std::pair<std::string, FreqType>& pair) {
 		str = pair.first;
 		freq = pair.second;
 	}
-	Frequency(const std::string str, const freq_t freq)
+	Frequency(const std::string str, const FreqType freq)
 		: str(str), freq(freq) {}
 	Frequency() {
 		str = "";

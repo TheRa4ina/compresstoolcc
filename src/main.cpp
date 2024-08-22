@@ -3,7 +3,6 @@
 #include <vector>
 #include <unordered_map>
 #include "src/huffman.h"
-using freq_t = uint32_t;
 
 int main(){
     //freq = getFileFreq(path);
