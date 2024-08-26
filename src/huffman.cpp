@@ -5,9 +5,10 @@
 #include <cassert>
 
 namespace {
+	//TODO make frequency use char and not string
 	std::unordered_map<std::string, FreqType> getFrequency(std::istream& is);
 	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency);
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits);
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Byte cur_bits);
 }
 
 namespace huffman {
@@ -98,7 +99,7 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Byte cur_bits)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();

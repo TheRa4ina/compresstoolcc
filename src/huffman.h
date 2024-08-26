@@ -5,8 +5,8 @@
 #include "node.h"
 
 typedef uint32_t FreqType;
-typedef uint32_t Bits;
-typedef std::unordered_map<char, Bits> CharBitMap;
+typedef uint8_t Byte;
+typedef std::unordered_map<char, Byte> CharBitMap;
 
 
 struct Frequency {
