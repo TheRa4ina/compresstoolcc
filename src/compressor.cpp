@@ -2,7 +2,7 @@
 #include <bit>
 #include <fstream>
 
-typedef uint16_t Bits;
+typedef uint32_t Bits;
 
 /// <summary>
 /// Writes to output_stream compressed version of data from input_stream 
@@ -48,7 +48,7 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 			cur_bits  <<= bits_width;
 			cur_bits  |=  char_bits;
 
-			if (cur_width >= BITS_IN_BYTE) {
+			while (cur_width >= BITS_IN_BYTE) {
 				uint8_t cut_off = cur_width - BITS_IN_BYTE;
 
 				// push off remainder width(cur_width) and save lower 8 bits to Byte b
