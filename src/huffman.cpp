@@ -5,8 +5,8 @@
 #include <cassert>
 
 namespace {
-	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency);
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Byte cur_bits);
+	Node<Frequency> buildTree(CharFreqMap char_frequency);
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits);
 }
 
 namespace huffman {
@@ -15,7 +15,7 @@ namespace huffman {
 /// </summary>
 /// <param name="is">input istream, of which build dictionary</param>
 /// <returns> map of chars to their bitset</returns>
-	CharBitMap buildDictionary(std::unordered_map<std::string, FreqType>& frequency_map)
+	CharBitMap buildDictionary(CharFreqMap& frequency_map)
 	{
 		auto root = buildTree(frequency_map);
 		CharBitMap dict;
@@ -34,7 +34,7 @@ namespace {
 	/// </summary>
 	/// <param name="char_frequency">- used chars and their frequency</param>
 	/// <returns>top of huffman tree</returns>
-	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency)
+	Node<Frequency> buildTree(CharFreqMap char_frequency)
 	{
 		if (char_frequency.size() == 0) {
 			return {};
@@ -42,9 +42,6 @@ namespace {
 		std::vector<Node<Frequency>> nodes;
 		for (const auto& pair : char_frequency)
 		{
-			assert(pair.first.size() == 1);	// initial frequency is supposed to be 
-			// frequency of chars. Its std::string
-			// initially for convinience (Mostly my inability to think about how to make it other way)
 			nodes.emplace_back(Node<Frequency>(Frequency(pair)));
 		}
 		auto comp = [](const Node<Frequency> left, const Node<Frequency> right) {
@@ -62,9 +59,8 @@ namespace {
 			Frequency first_freq = first.getValue();
 			Frequency second_freq = second.getValue();
 
-			std::string letters = first_freq.str + second_freq.str;
 			FreqType new_freq = first_freq.freq + second_freq.freq;
-			Node<Frequency> top(Frequency(letters, new_freq));
+			Node<Frequency> top(Frequency('\0', new_freq));// using '\0' as unsed char
 			Node<Frequency> branch(top);
 			branch.setLeft(first);
 			branch.setRight(second);
@@ -74,12 +70,11 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Byte cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();
-			assert(cur.str.size() == 1);// leaf node is always supposed to be single char. That just how huffman works
-			return { {cur.str[0],cur_bits} };
+			return { {cur.str,cur_bits} };
 		}
 
 		CharBitMap dict;

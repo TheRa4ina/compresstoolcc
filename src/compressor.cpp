@@ -2,14 +2,14 @@
 #include <bit>
 #include <fstream>
 
-typedef uint32_t Bits;
+typedef uint8_t Byte;
 
 /// <summary>
 /// Writes to output_stream compressed version of data from input_stream 
 /// </summary>
 void Compressor::compress(std::istream & input_stream, std::ostream & output_stream)
 {
-	std::unordered_map<std::string, FreqType> frequency_map = getFrequency(input_stream);
+	CharFreqMap frequency_map = getFrequency(input_stream);
 	dictionary = huffman::buildDictionary(frequency_map);
 	input_stream.clear();
 	input_stream.seekg(0, input_stream.beg);
@@ -23,11 +23,11 @@ void Compressor::compress(std::istream & input_stream, std::ostream & output_str
 /// Returns pair with string instead of char, because more convinient to use in buildTree functon
 /// </summary>
 /// <returns>frequency map of every char.</returns>
-std::unordered_map<std::string, FreqType> Compressor::getFrequency(std::istream& is)
+CharFreqMap Compressor::getFrequency(std::istream& is)
 {
-	std::unordered_map < std::string, FreqType > freq;
+	CharFreqMap freq;
 	char buffer[CHUNK_SIZE] = { 0 };
-	std::string ch;
+	char ch;
 	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
 		std::size_t bytesRead = is.gcount();
 		for (size_t i = 0; i < bytesRead; i++)
@@ -43,7 +43,8 @@ void Compressor::writeHeader(std::ostream& os)
 {
 	os.put(0);//placeholder for unused bits, no idea how to make better currently
 	for (const auto& [ch, val] : dictionary) {
-		os << ch << val;
+		os.put(ch);
+		os.write(reinterpret_cast<const char*>(&val), sizeof val);
 	}
 }
 

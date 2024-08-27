@@ -7,7 +7,7 @@ public:
 	void compress(std::istream & input_stream, std::ostream & output_stream);
 private:
 	//TODO make frequency use char and not string
-	std::unordered_map<std::string, FreqType> getFrequency(std::istream& is);
+	CharFreqMap getFrequency(std::istream& is);
 
 	void writeHeader(std::ostream& output_stream);
 	void writeCompressed(std::istream& input_stream, std::ostream& output_stream);
