@@ -54,7 +54,7 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 				// push off remainder width(cur_width) and save lower 8 bits to Byte b
 				//Was		| 0000 0011 | 1010 0110 |
 				//Shifted to| 0000 0000 | 1110 1001 | (10 was cutoff)
-				//b contains| 1111 1001 |
+				//b contains| 1110 1001 |
 				Byte b = (cur_bits >> (cut_off)) & 0xff;
 				os.put(b);
 
@@ -67,6 +67,13 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 				cur_width = cut_off;
 			}
 		}
+	}
+	while (cur_width > 0) {
+		uint8_t cut_off = cur_width - BITS_IN_BYTE;
+		Byte b = (cur_bits >> (cut_off)) & 0xff;
+		os.put(b);
+		cur_bits &= ~(~0U << cut_off);
+		cur_width = cut_off;
 	}
 	Byte b = cur_bits;
 	os.put(b);
