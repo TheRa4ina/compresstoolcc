@@ -25,5 +25,5 @@ struct Frequency {
 };
 
 namespace huffman{
-	CharBitMap buildDictionary(std::istream& is);
+	CharBitMap buildDictionary(std::unordered_map<std::string, FreqType>& frequency_map);
 }

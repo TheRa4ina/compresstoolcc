@@ -5,8 +5,6 @@
 #include <cassert>
 
 namespace {
-	//TODO make frequency use char and not string
-	std::unordered_map<std::string, FreqType> getFrequency(std::istream& is);
 	Node<Frequency> buildTree(std::unordered_map<std::string, FreqType> char_frequency);
 	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Byte cur_bits);
 }
@@ -17,9 +15,8 @@ namespace huffman {
 /// </summary>
 /// <param name="is">input istream, of which build dictionary</param>
 /// <returns> map of chars to their bitset</returns>
-	CharBitMap buildDictionary(std::istream& is)
+	CharBitMap buildDictionary(std::unordered_map<std::string, FreqType>& frequency_map)
 	{
-		std::unordered_map<std::string,FreqType> frequency_map = getFrequency(is);
 		auto root = buildTree(frequency_map);
 		CharBitMap dict;
 		if (root.getValue().freq != 0) {//if our tree is not empty
@@ -31,28 +28,6 @@ namespace huffman {
 }
 
 namespace {
-	static constexpr std::size_t CHUNK_SIZE = 1024;
-
-	/// <summary>
-	/// Get frequency of every char in istream <para/>
-	/// Returns pair with string instead of char, because more convinient to use in buildTree functon
-	/// </summary>
-	/// <returns>frequency map of every char.</returns>
-	std::unordered_map < std::string, FreqType > getFrequency(std::istream& is)
-	{
-		std::unordered_map < std::string, FreqType > freq;
-		char buffer[CHUNK_SIZE] = { 0 };
-		std::string ch;
-		while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
-			std::size_t bytesRead = is.gcount();
-			for (size_t i = 0; i < bytesRead; i++)
-			{
-				ch = buffer[i];
-				++freq[ch];
-			}
-		}
-		return freq;
-	}
 
 	/// <summary>
 	/// builds huffman tree
