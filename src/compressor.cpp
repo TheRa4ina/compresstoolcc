@@ -68,13 +68,6 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 			}
 		}
 	}
-	while (cur_width > 0) {
-		uint8_t cut_off = cur_width - BITS_IN_BYTE;
-		Byte b = (cur_bits >> (cut_off)) & 0xff;
-		os.put(b);
-		cur_bits &= ~(~0U << cut_off);
-		cur_width = cut_off;
-	}
 	Byte b = cur_bits;
 	os.put(b);
 
