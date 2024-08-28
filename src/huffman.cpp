@@ -83,7 +83,7 @@ namespace {
 		auto right = cur_node.getRight();
 		if (left != nullptr) {
 			dict.merge(helperBuildDictionary(*left, cur_bits));
-			cur_bits++;
+			++cur_bits;
 		}
 		if (right != nullptr) {
 			dict.merge(helperBuildDictionary(*right, cur_bits));

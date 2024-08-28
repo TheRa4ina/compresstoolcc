@@ -2,6 +2,8 @@
 #include <bit>
 #include <fstream>
 
+
+// TODO Canonical huffman code
 typedef uint8_t Byte;
 
 /// <summary>
@@ -44,7 +46,7 @@ void Compressor::writeHeader(std::ostream& os)
 	os.put(0);//placeholder for unused bits, no idea how to make better currently
 	for (const auto& [ch, val] : dictionary) {
 		os.put(ch);
-		os.write(reinterpret_cast<const char*>(&val), sizeof val);
+		os.write(reinterpret_cast<const char*>(&val.bits), sizeof val.bits);
 	}
 }
 
@@ -52,7 +54,7 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 {
 	constexpr size_t BITS_IN_BYTE = 8;
 	char buffer[CHUNK_SIZE] = { 0 };
-	Bits cur_bits  = 0b0;
+	uint32_t cur_bits  = 0b0;
 	uint8_t cur_width = 0;
 	char ch = '\0';
 	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
@@ -61,14 +63,14 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 		{
 			ch = buffer[i];
 			Bits char_bits  = dictionary[ch];
-			Bits bits_width = std::max(1, std::bit_width(char_bits));// using max, because 
+			uint8_t bits_width = char_bits.width;// using max, because 
 																	// std::bit_width(0b0)==0
 																	
 			// keeping track of bit_width by additioning instead of just using std::bit_width
 			// on current because bits mapped to char could start with 0
 			cur_width +=  bits_width;
 			cur_bits  <<= bits_width;
-			cur_bits  |=  char_bits;
+			cur_bits  |=  char_bits.bits;
 
 			while (cur_width >= BITS_IN_BYTE) {
 				uint8_t cut_off = cur_width - BITS_IN_BYTE;
