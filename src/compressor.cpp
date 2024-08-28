@@ -6,9 +6,6 @@
 // TODO Canonical huffman code
 typedef uint8_t Byte;
 
-/// <summary>
-/// Writes to output_stream compressed version of data from input_stream 
-/// </summary>
 void Compressor::compress(std::istream & input_stream, std::ostream & output_stream)
 {
 	CharFreqMap frequency_map = getFrequency(input_stream);

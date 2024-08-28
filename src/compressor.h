@@ -4,6 +4,9 @@
 
 class Compressor {
 public:
+	/// <summary>
+	/// Writes to output_stream compressed version of data from input_stream 
+	/// </summary>
 	void compress(std::istream & input_stream, std::ostream & output_stream);
 private:
 	CharFreqMap getFrequency(std::istream& is);

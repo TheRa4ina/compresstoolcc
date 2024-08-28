@@ -10,11 +10,6 @@ namespace {
 }
 
 namespace huffman {
-/// <summary>
-/// Builds Huffman dictionary from istream
-/// </summary>
-/// <param name="is">input istream, of which build dictionary</param>
-/// <returns> map of chars to their bitset</returns>
 	CharBitMap buildDictionary(CharFreqMap& frequency_map)
 	{
 		auto root = buildTree(frequency_map);
