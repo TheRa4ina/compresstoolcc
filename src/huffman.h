@@ -5,8 +5,9 @@
 #include <functional>
 #include "node.h"
 
-// TODO move this structs to some special file or smth
+// FIXME move this structs to some special file or smth
 
+// TODO rename Bits to "Code" because makes more sense
 struct Bits {
 	uint32_t bits;
 	uint8_t width;
@@ -17,11 +18,6 @@ struct Bits {
 		: bits(value), width(std::bit_width(bits)) {}
 	Bits(const uint32_t value, uint8_t width)
 		: bits(value), width(width) {}
-	friend Bits operator<< (Bits i,uint32_t shift) {
-		i.bits = i.bits << shift;
-		i.width += shift;
-		return i;
-	}
 	Bits& operator++(){
 		++bits;
 		if (std::has_single_bit(bits)&& bits!=1) {
@@ -35,6 +31,11 @@ struct Bits {
 		return old;
 	}
 
+	friend Bits operator<< (Bits i,uint32_t shift) {
+		i.bits = i.bits << shift;
+		i.width += shift;
+		return i;
+	}
 	Bits& operator<<= (uint32_t shift) {
 		*this = *this << shift;
 		return *this;
@@ -48,7 +49,7 @@ struct Bits {
 		*this= *this >> shift;
 		return *this;
 	}
-	friend Bits operator| (Bits& i, uint32_t mask) {
+	friend Bits operator| (Bits i, uint32_t mask) {
 		i.bits = i.bits | mask;
 		return i;
 	}
@@ -57,7 +58,7 @@ struct Bits {
 		return *this;
 	}
 
-	friend Bits operator& (Bits& i, uint32_t mask) {
+	friend Bits operator& (Bits i, uint32_t mask) {
 		i.bits = i.bits & mask;
 		return i;
 	}
