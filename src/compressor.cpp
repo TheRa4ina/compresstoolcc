@@ -51,8 +51,8 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 {
 	constexpr size_t BITS_IN_BYTE = 8;
 	char buffer[CHUNK_SIZE] = { 0 };
-	uint32_t cur_bits  = 0b0;
-	uint8_t cur_width = 0;
+
+	Bits cur_bits(0,0);
 	char ch = '\0';
 	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
 		std::size_t bytes_read = is.gcount();
@@ -65,18 +65,17 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 																	
 			// keeping track of bit_width by additioning instead of just using std::bit_width
 			// on current because bits mapped to char could start with 0
-			cur_width +=  bits_width;
 			cur_bits  <<= bits_width;
 			cur_bits  |=  char_bits.bits;
 
-			while (cur_width >= BITS_IN_BYTE) {
-				uint8_t cut_off = cur_width - BITS_IN_BYTE;
+			while (cur_bits.width >= BITS_IN_BYTE) {
+				uint8_t cut_off = cur_bits.width - BITS_IN_BYTE;
 
 				// push off remainder width(cur_width) and save lower 8 bits to Byte b
 				//Was		| 0000 0011 | 1010 0110 |
 				//Shifted to| 0000 0000 | 1110 1001 | (10 was cutoff)
 				//b contains| 1110 1001 |
-				Byte b = (cur_bits >> (cut_off)) & 0xff;
+				Byte b = ((cur_bits >> (cut_off)) & 0xff).bits;
 				os.put(b);
 
 				// Remember only remainder of bits, since last one
@@ -85,15 +84,15 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 				// Became	|0000 0000|0000 0010|
 				cur_bits &= ~(~0U << cut_off);
 				//		   \_______Mask_______/
-				cur_width = cut_off;
+				cur_bits.width = cut_off;
 			}
 		}
 	}
-	Byte b = cur_bits;
+	Byte b = cur_bits.bits;
 	os.put(b);
 
 	// write out unused bits in a placeholder
 	os.seekp(0);
-	uint8_t unused_bits_amount = BITS_IN_BYTE - cur_width;
+	uint8_t unused_bits_amount = BITS_IN_BYTE - cur_bits.width;
 	os.put(unused_bits_amount);
 }
