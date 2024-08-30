@@ -1,6 +1,7 @@
 #App
 add_library(Algos
 	huffman.cpp
+	util.cpp
 )
 target_include_directories(Algos PRIVATE ${CMAKE_CURRENT_LIST_DIR}/..)
 

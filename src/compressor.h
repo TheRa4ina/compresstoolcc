@@ -9,7 +9,6 @@ public:
 	/// </summary>
 	void compress(std::istream & input_stream, std::ostream & output_stream);
 private:
-	CharFreqMap getFrequency(std::istream& is);
 
 	void writeHeader(std::ostream& output_stream);
 	void writeCompressed(std::istream& input_stream, std::ostream& output_stream);

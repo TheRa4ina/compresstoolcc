@@ -1,23 +1,25 @@
 #include <gtest/gtest.h>
 #include <bit>
 #include "src/huffman.h"
+#include "src/util.h"
 
 TEST(Huffman, buildDictionary_basicUsage_valid)
 {
     //a:15,b:7,c:6,d:6,e:5
     std::stringstream is{ "aaaaaaaaaaaaaaabbbbbbbccccccddddddeeeee" };
-    CharBitMap result = huffman::buildDictionary(is);
-    EXPECT_EQ(std::bit_width(result['a']), 0);
-    EXPECT_EQ(std::bit_width(result['b']), 3);
-    EXPECT_EQ(std::bit_width(result['c']), 3);
-    EXPECT_EQ(std::bit_width(result['d']), 3);
-    EXPECT_EQ(std::bit_width(result['e']), 3);
+    CharFreqMap freq_map = getFrequency(is);
+    CharBitMap result = huffman::buildDictionary(freq_map);
+    EXPECT_EQ(result['a'].width, 1);
+    EXPECT_EQ(result['b'].width, 3);
+    EXPECT_EQ(result['c'].width, 3);
+    EXPECT_EQ(result['d'].width, 3);
+    EXPECT_EQ(result['e'].width, 3);
 }
 
 TEST(Huffman, buildDictionary_empty_EmptyCharBitMap)
 {
-    //a:15,b:7,c:6,d:6,e:5
     std::stringstream is{ "" };
-    CharBitMap result = huffman::buildDictionary(is);
+    CharFreqMap freq_map = getFrequency(is);
+    CharBitMap result = huffman::buildDictionary(freq_map);
     ASSERT_TRUE(result.size() == 0);
 }

@@ -1,4 +1,5 @@
 #include <src/compressor.h>
+#include <src/util.h>
 #include <bit>
 #include <fstream>
 
@@ -15,27 +16,6 @@ void Compressor::compress(std::istream & input_stream, std::ostream & output_str
 
 	writeHeader(output_stream);
 	writeCompressed(input_stream,output_stream);
-}
-
-/// <summary>
-/// Get frequency of every char in istream <para/>
-/// Returns pair with string instead of char, because more convinient to use in buildTree functon
-/// </summary>
-/// <returns>frequency map of every char.</returns>
-CharFreqMap Compressor::getFrequency(std::istream& is)
-{
-	CharFreqMap freq;
-	char buffer[CHUNK_SIZE] = { 0 };
-	char ch;
-	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
-		std::size_t bytesRead = is.gcount();
-		for (size_t i = 0; i < bytesRead; i++)
-		{
-			ch = buffer[i];
-			++freq[ch];
-		}
-	}
-	return freq;
 }
 
 void Compressor::writeHeader(std::ostream& os)
