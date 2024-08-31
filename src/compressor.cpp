@@ -6,6 +6,7 @@
 
 // TODO Canonical huffman code
 typedef uint8_t Byte;
+constexpr char END_OF_HEADER = '|';
 
 void Compressor::compress(std::istream & input_stream, std::ostream & output_stream)
 {
@@ -25,6 +26,7 @@ void Compressor::writeHeader(std::ostream& os)
 		os.put(ch);
 		os.write(reinterpret_cast<const char*>(&val.bits), sizeof val.bits);
 	}
+	os.put(END_OF_HEADER);
 }
 
 void Compressor::writeCompressed(std::istream& is, std::ostream& os)
