@@ -1,4 +1,5 @@
 #include "src/huffman.h"
+#include "src/util.h"
 #include <algorithm>
 #include <queue>
 #include <vector>
@@ -15,7 +16,7 @@ namespace huffman {
 		auto root = buildTree(frequency_map);
 		CharBitMap dict;
 		if (root.getValue().freq != 0) {//if our tree is not empty
-			dict = helperBuildDictionary(root, 0);
+			dict = helperBuildDictionary(root,Bits());
 		}
 
 		return dict;
@@ -55,8 +56,8 @@ namespace {
 			Frequency second_freq = second.getValue();
 
 			FreqType new_freq = first_freq.freq + second_freq.freq;
-			Node<Frequency> top(Frequency('\0', new_freq));// using '\0' as unsed char
-			Node<Frequency> branch(top);
+			Node<Frequency> branch(Frequency('\0', new_freq));// using '\0' as unsed char
+
 			branch.setLeft(first);
 			branch.setRight(second);
 			queue.push(branch);
@@ -65,23 +66,23 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits)
+	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_code)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();
-			return { {cur.str,cur_bits} };
+			return { {cur.str,cur_code} };
 		}
 
 		CharBitMap dict;
-		cur_bits <<= 1;
+		cur_code <<= 1;
 		auto left = cur_node.getLeft();
 		auto right = cur_node.getRight();
 		if (left != nullptr) {
-			dict.merge(helperBuildDictionary(*left, cur_bits));
-			++cur_bits;
+			dict.merge(helperBuildDictionary(*left, cur_code));
+			++cur_code;
 		}
 		if (right != nullptr) {
-			dict.merge(helperBuildDictionary(*right, cur_bits));
+			dict.merge(helperBuildDictionary(*right, cur_code));
 		}
 
 		return dict;

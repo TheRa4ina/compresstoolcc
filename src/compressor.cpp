@@ -24,17 +24,18 @@ void Compressor::writeHeader(std::ostream& os)
 	os.put(0);//placeholder for unused bits, no idea how to make better currently
 	for (const auto& [ch, val] : dictionary) {
 		os.put(ch);
-		os.write(reinterpret_cast<const char*>(&val.bits), sizeof val.bits);
+		int bits = val.getBits();
+		os.write(reinterpret_cast<const char*>(&bits), sizeof bits);
 	}
 	os.put(END_OF_HEADER);
 }
 
 void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 {
-	constexpr size_t BITS_IN_BYTE = 8;
+	constexpr size_t BITS_IN_BYTE = CHAR_BIT;
 	char buffer[CHUNK_SIZE] = { 0 };
 
-	Bits cur_bits(0,0);
+	Bits cur_bits;
 	char ch = '\0';
 	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
 		std::size_t bytes_read = is.gcount();
@@ -42,39 +43,32 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 		{
 			ch = buffer[i];
 			Bits char_bits  = dictionary[ch];
-			uint8_t bits_width = char_bits.width;// using max, because 
+			uint8_t bits_width = char_bits.getWidth();// using max, because 
 																	// std::bit_width(0b0)==0
 																	
 			// keeping track of bit_width by additioning instead of just using std::bit_width
 			// on current because bits mapped to char could start with 0
 			cur_bits  <<= bits_width;
-			cur_bits  |=  char_bits.bits;
+			cur_bits  |=  char_bits.getBits();
 
-			while (cur_bits.width >= BITS_IN_BYTE) {
-				uint8_t cut_off = cur_bits.width - BITS_IN_BYTE;
+			while (cur_bits.getWidth() >= BITS_IN_BYTE) {
+				uint8_t cut_off = cur_bits.getWidth() - BITS_IN_BYTE;
 
 				// push off remainder width(cur_width) and save lower 8 bits to Byte b
 				//Was		| 0000 0011 | 1010 0110 |
 				//Shifted to| 0000 0000 | 1110 1001 | (10 was cutoff)
 				//b contains| 1110 1001 |
-				Byte b = ((cur_bits >> (cut_off)) & 0xff).bits;
+				Byte b = ((cur_bits >> (cut_off)) & 0xff).getBits();
 				os.put(b);
-
-				// Remember only remainder of bits, since last one
-				// Was		|0000 0011|1010 0110|
-				// Mask		|0000 0000|0000 0011|
-				// Became	|0000 0000|0000 0010|
-				cur_bits &= ~(~0U << cut_off);
-				//		   \_______Mask_______/
-				cur_bits.width = cut_off;
+				cur_bits.setWidth(cut_off);
 			}
 		}
 	}
-	Byte b = cur_bits.bits;
+	Byte b = cur_bits.getBits();
 	os.put(b);
 
 	// write out unused bits in a placeholder
 	os.seekp(0);
-	uint8_t unused_bits_amount = BITS_IN_BYTE - cur_bits.width;
+	uint8_t unused_bits_amount = BITS_IN_BYTE - cur_bits.getWidth();
 	os.put(unused_bits_amount);
 }

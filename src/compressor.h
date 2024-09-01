@@ -1,6 +1,6 @@
 #pragma once
 #include<string>
-#include <src/huffman.h>
+#include<src/huffman.h>
 
 class Compressor {
 public:

@@ -1,6 +1,8 @@
 #pragma once 
-#include "src/huffman.h"
+#include <unordered_map>
 
+typedef uint32_t FreqType;
+typedef std::unordered_map<char, FreqType> CharFreqMap;
 /// <summary>
 /// Get frequency of every char in istream <para/>
 /// Returns pair with string instead of char, because more convinient to use in buildTree functon

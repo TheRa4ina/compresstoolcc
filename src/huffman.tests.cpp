@@ -9,11 +9,11 @@ TEST(Huffman, buildDictionary_basicUsage_valid)
     std::stringstream is{ "aaaaaaaaaaaaaaabbbbbbbccccccddddddeeeee" };
     CharFreqMap freq_map = getFrequency(is);
     CharBitMap result = huffman::buildDictionary(freq_map);
-    EXPECT_EQ(result['a'].width, 1);
-    EXPECT_EQ(result['b'].width, 3);
-    EXPECT_EQ(result['c'].width, 3);
-    EXPECT_EQ(result['d'].width, 3);
-    EXPECT_EQ(result['e'].width, 3);
+    EXPECT_EQ(result['a'].getWidth(), 1);
+    EXPECT_EQ(result['b'].getWidth(), 3);
+    EXPECT_EQ(result['c'].getWidth(), 3);
+    EXPECT_EQ(result['d'].getWidth(), 3);
+    EXPECT_EQ(result['e'].getWidth(), 3);
 }
 
 TEST(Huffman, buildDictionary_empty_EmptyCharBitMap)
