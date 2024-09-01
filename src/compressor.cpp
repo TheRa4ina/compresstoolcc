@@ -1,6 +1,5 @@
 #include <src/compressor.h>
 #include <src/util.h>
-#include <bit>
 #include <fstream>
 
 

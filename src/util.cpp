@@ -1,5 +1,4 @@
 #include "src/util.h"
-#include "src/huffman.h"
 
 static constexpr size_t CHUNK_SIZE = 1024;
 CharFreqMap getFrequency(std::istream& is)

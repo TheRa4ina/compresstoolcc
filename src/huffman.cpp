@@ -1,9 +1,9 @@
-#include "src/huffman.h"
-#include "src/util.h"
+#include <src/huffman.h>
+#include <src/node.h>
 #include <algorithm>
 #include <queue>
-#include <vector>
 #include <cassert>
+#include <istream>
 
 namespace {
 	Node<Frequency> buildTree(CharFreqMap char_frequency);

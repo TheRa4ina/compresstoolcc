@@ -1,12 +1,10 @@
 #pragma once
-#include <istream>
-#include <bit>
-#include <functional>
-#include <src/node.h>
-#include <src/bits.h>
-#include <src/util.h>
+#include <src/bits.h>// for Bits
+#include <src/util.h>// for FreqType and charFreqMap
 
 // FIXME move this structs to some special file or smth
+
+typedef std::unordered_map<char, Bits> CharBitMap;
 
 struct Frequency {
 	char str;

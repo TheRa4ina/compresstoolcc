@@ -1,5 +1,5 @@
 #include "src/bits.h"
-
+#include <bit>
 Bits::Bits()
 	: bits(0), width(0) {}
 

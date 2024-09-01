@@ -1,5 +1,4 @@
 #pragma once
-#include <bit>
 #include <unordered_map>
 
 
@@ -70,5 +69,3 @@ namespace std {
 		}
 	};
 }
-
-typedef std::unordered_map<char, Bits> CharBitMap;

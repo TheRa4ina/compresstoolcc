@@ -1,5 +1,6 @@
 #pragma once 
 #include <unordered_map>
+#include <iostream>
 
 typedef uint32_t FreqType;
 typedef std::unordered_map<char, FreqType> CharFreqMap;
