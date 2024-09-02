@@ -1,13 +1,13 @@
 #pragma once
+#include <array>
 #include <src/bits.h>// for Bits
 #include <src/util.h>// for FreqType and charFreqMap
 
+typedef std::array<Bits,256> CharBitMap;
+
 // FIXME move this structs to some special file or smth
-
-typedef std::unordered_map<char, Bits> CharBitMap;
-
 struct Frequency {
-	char str;
+	unsigned char str;
 	FreqType freq;
 	Frequency(const std::pair<char, FreqType>& pair) {
 		str = pair.first;

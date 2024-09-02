@@ -6,7 +6,7 @@ int main(){
     Compressor c;
     try {
         std::ifstream in("tests/5chars.txt",std::ios::in | std::ios::binary);
-        std::ofstream out("tests/5charsTsts.huffman",std::ios::out | std::ios_base::binary);
+        std::ofstream out("tests/5chars.huffman",std::ios::out | std::ios_base::binary);
         c.compress(in, out);
         out.flush();
     }

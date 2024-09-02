@@ -3,6 +3,8 @@
 #include <iostream>
 
 typedef uint32_t FreqType;
+
+// TODO change unordered map to array
 typedef std::unordered_map<char, FreqType> CharFreqMap;
 /// <summary>
 /// Get frequency of every char in istream <para/>

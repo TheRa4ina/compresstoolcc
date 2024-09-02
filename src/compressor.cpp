@@ -20,9 +20,12 @@ void Compressor::compress(std::istream & input_stream, std::ostream & output_str
 
 void Compressor::writeHeader(std::ostream& os)
 {
+
 	os.put(0);//placeholder for unused bits, no idea how to make better currently
-	for (const auto& [ch, val] : dictionary) {
-		os.put(ch);
+	for (size_t i = 0; i < dictionary.size(); i++)
+	{
+		Bits val = dictionary[i];
+		os.put(char(i));
 		int bits = val.getBits();
 		os.write(reinterpret_cast<const char*>(&bits), sizeof bits);
 	}
@@ -41,6 +44,8 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 		for (size_t i =0;i<bytes_read;i++)
 		{
 			ch = buffer[i];
+			// https://developercommunity.visualstudio.com/t/c28020-false-positives/923103
+			#pragma warning(suppress: 28020)//size of dict is 256. char will never be >=256
 			Bits char_bits  = dictionary[ch];
 			uint8_t bits_width = char_bits.getWidth();// using max, because 
 																	// std::bit_width(0b0)==0

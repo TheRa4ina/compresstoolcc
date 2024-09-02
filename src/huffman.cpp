@@ -7,7 +7,7 @@
 
 namespace {
 	Node<Frequency> buildTree(CharFreqMap char_frequency);
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits);
+	void helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_bits, CharBitMap& dict);
 }
 
 namespace huffman {
@@ -16,11 +16,11 @@ namespace huffman {
 		auto root = buildTree(frequency_map);
 		CharBitMap dict;
 		if (root.getValue().freq != 0) {//if our tree is not empty
-			dict = helperBuildDictionary(root,Bits());
+			helperBuildDictionary(root,Bits(),dict);
 		}
 
 		return dict;
-	}
+	}	
 }
 
 namespace {
@@ -66,25 +66,24 @@ namespace {
 		return queue.top();
 	}
 
-	CharBitMap helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_code)
+	void helperBuildDictionary(const Node<Frequency>& cur_node, Bits cur_code,CharBitMap& dict)
 	{
 		if (cur_node.isLeaf()) {
 			Frequency cur = cur_node.getValue();
-			return { {cur.str,cur_code} };
-		}
 
-		CharBitMap dict;
+			// https://developercommunity.visualstudio.com/t/c28020-false-positives/923103
+			#pragma warning(suppress: 28020)//size of dict is 256. uint8_t will never be >=256
+			dict[cur.str] = cur_code;
+		}
 		cur_code <<= 1;
 		auto left = cur_node.getLeft();
 		auto right = cur_node.getRight();
 		if (left != nullptr) {
-			dict.merge(helperBuildDictionary(*left, cur_code));
+			(helperBuildDictionary(*left, cur_code,dict));
 			++cur_code;
 		}
 		if (right != nullptr) {
-			dict.merge(helperBuildDictionary(*right, cur_code));
+			(helperBuildDictionary(*right, cur_code,dict));
 		}
-
-		return dict;
 	}
 }
