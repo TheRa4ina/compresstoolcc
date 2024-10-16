@@ -1,7 +1,7 @@
 #include <src/compressor.h>
 #include <src/util.h>
 #include <fstream>
-
+#include <climits>
 
 // TODO Canonical huffman code
 typedef uint8_t Byte;
