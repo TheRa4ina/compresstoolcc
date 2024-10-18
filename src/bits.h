@@ -11,10 +11,15 @@ public:
 	const uint32_t getBits() const;
 	void setBits(uint32_t new_bits);
 	void setBits(uint32_t new_bits, uint8_t new_width);
-
+	
+	/// <summary>
+	/// Gets smallest number of bits needed to represent the current value<para/>
+	/// If current value is zero, then returns 1
+	/// </summary>
+	/// <returns>one, if current value zero, otherwise smallest number of bits to represent value</returns>
 	const uint8_t getWidth() const;
 	/// <summary>
-	/// Cuts off bits, leaving only new_width of lower bits
+	/// zeroes out higher bits, leaving only new_width of lower bits
 	/// </summary>
 	/// <param name="new_width">amount of lower bits to stay</param>
 	void setWidth(uint8_t new_width);
