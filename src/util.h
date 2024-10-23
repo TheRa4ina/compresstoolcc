@@ -1,6 +1,7 @@
 #pragma once 
 #include <unordered_map>
 #include <iostream>
+#include <cstdint>
 
 typedef uint32_t FreqType;
 

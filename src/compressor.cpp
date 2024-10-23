@@ -1,7 +1,7 @@
 #include <src/compressor.h>
 #include <src/util.h>
 #include <fstream>
-
+#include <climits>
 
 typedef uint8_t Byte;
 constexpr char END_OF_HEADER = '|';

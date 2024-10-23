@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include <compare>
+#include <cstdint>
 
 // would Width definition be expectable to find here?
 typedef uint8_t Width;
