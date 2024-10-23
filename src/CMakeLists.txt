@@ -28,6 +28,11 @@ add_custom_command(TARGET AlgosTests PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_BINARY_DIR}/tests)
 
+#temporal <----- cause well, easier to test with main like this
+add_custom_command(TARGET App PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_BINARY_DIR}/tests)
+
 gtest_discover_tests(AlgosTests)
 
 

@@ -2,33 +2,43 @@
 #include <unordered_map>
 #include <cstdint>
 
+// would Width definition be expectable to find here?
+typedef uint8_t Width;
 
 class Bits {
 public:
+	/// <summary>
+	/// Creates Bits with value=0 and width=0
+	/// </summary>
 	Bits();
+	/// <summary>
+	/// Creates Bits with value and width that minimally represents this value
+	/// if value==0, width=1
+	/// </summary>
 	Bits(const uint32_t value);
 	Bits(const uint32_t value, uint8_t width);
 
 	const uint32_t getBits() const;
 	void setBits(uint32_t new_bits);
 	void setBits(uint32_t new_bits, uint8_t new_width);
-
+	
+	/// <returns>return width member value</returns>
 	const uint8_t getWidth() const;
 	/// <summary>
-	/// Cuts off bits, leaving only new_width of lower bits
+	/// zeroes out higher bits, leaving only new_width of lower bits
 	/// </summary>
 	/// <param name="new_width">amount of lower bits to stay</param>
 	void setWidth(uint8_t new_width);
 
 	Bits& operator++();
 	Bits operator++(int);
+	constexpr friend bool operator==(Bits const& lhs, Bits const& rhs)= default;
 	friend Bits operator| (Bits i, uint32_t mask);
 	friend Bits operator| (Bits i, Bits mask);
 	friend Bits operator& (Bits i, uint32_t mask);
 	friend Bits operator& (Bits i, Bits mask);
 	friend Bits operator<< (Bits i, uint32_t shift);
 	friend Bits operator>> (Bits i, uint32_t shift);
-
 	template <class T>
 	Bits& operator<<=	(T shift) {
 		*this = *this << shift;
@@ -54,8 +64,8 @@ public:
 	}
 
 private:
-	uint8_t width;
 	uint32_t bits;
+	Width width;
 };
 
 
