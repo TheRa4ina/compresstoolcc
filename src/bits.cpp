@@ -4,7 +4,7 @@ Bits::Bits()
 	: bits(0), width(0) {}
 
 Bits::Bits(const uint32_t value)
-	: bits(value), width(std::bit_width(bits)) {}
+	: bits(value), width(std::max(std::bit_width(value),1)) {}
 
 Bits::Bits(const uint32_t value, uint8_t width)
 	: bits(value), width(width) {}

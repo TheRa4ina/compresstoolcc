@@ -3,8 +3,13 @@
 #include <src/bits.h>// for Bits
 #include <src/util.h>// for FreqType and charFreqMap
 
-typedef std::array<Bits,256> CharBitMap;
+using CharBitMap = std::array<Bits,256> ;
+// FIXME width dict seems like a strange name
+// considering that everytgin else has a map in a name
+// should they even be called maps?
 
+
+typedef std::array<Width, UINT8_MAX> WidthDict;
 // FIXME move this structs to some special file or smth
 struct Frequency {
 	unsigned char str;
@@ -23,9 +28,22 @@ struct Frequency {
 
 namespace huffman{
 	/// <summary>
-	/// Builds Huffman dictionary from istream
+	/// Builds character to their codewidth map
 	/// </summary>
-	/// <param name="is">input istream, of which build dictionary</param>
-	/// <returns> map of chars to their bitset</returns>
-	CharBitMap buildDictionary(CharFreqMap& frequency_map);
+	/// <param name="frequency_map">frequency of each char</param>
+	/// <returns>width of codes map</returns>
+	WidthDict buildWidthDictionary(const CharFreqMap& frequency_map);
+	/// <summary>
+	/// Builds cannonical huffman codes for each char
+	/// </summary>
+	/// <param name="width_map">widths of each chars</param>
+	/// <returns>canonical huffman codes map, even if char not used</returns>
+	CharBitMap buildDictionary(const WidthDict& width_map);
+	/// <summary>
+	/// Builds cannonical huffman codes for each char
+	/// </summary>
+	/// <param name="frequency_map">frequency of each cahr</param>
+	/// <returns>canonical huffman codes map, even if char not used</returns>
+	CharBitMap buildDictionary(const CharFreqMap& frequency_map);
+	
 }

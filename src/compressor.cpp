@@ -3,7 +3,6 @@
 #include <fstream>
 
 
-// TODO Canonical huffman code
 typedef uint8_t Byte;
 constexpr char END_OF_HEADER = '|';
 

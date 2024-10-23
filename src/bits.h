@@ -1,10 +1,20 @@
 #pragma once
 #include <unordered_map>
+#include <compare>
 
+// would Width definition be expectable to find here?
+typedef uint8_t Width;
 
 class Bits {
 public:
+	/// <summary>
+	/// Creates Bits with value=0 and width=0
+	/// </summary>
 	Bits();
+	/// <summary>
+	/// Creates Bits with value and width that minimally represents this value
+	/// if value==0, width=1
+	/// </summary>
 	Bits(const uint32_t value);
 	Bits(const uint32_t value, uint8_t width);
 
@@ -12,11 +22,7 @@ public:
 	void setBits(uint32_t new_bits);
 	void setBits(uint32_t new_bits, uint8_t new_width);
 	
-	/// <summary>
-	/// Gets smallest number of bits needed to represent the current value<para/>
-	/// If current value is zero, then returns 1
-	/// </summary>
-	/// <returns>one, if current value zero, otherwise smallest number of bits to represent value</returns>
+	/// <returns>return width member value</returns>
 	const uint8_t getWidth() const;
 	/// <summary>
 	/// zeroes out higher bits, leaving only new_width of lower bits
@@ -26,13 +32,13 @@ public:
 
 	Bits& operator++();
 	Bits operator++(int);
+	constexpr friend bool operator==(Bits const& lhs, Bits const& rhs)= default;
 	friend Bits operator| (Bits i, uint32_t mask);
 	friend Bits operator| (Bits i, Bits mask);
 	friend Bits operator& (Bits i, uint32_t mask);
 	friend Bits operator& (Bits i, Bits mask);
 	friend Bits operator<< (Bits i, uint32_t shift);
 	friend Bits operator>> (Bits i, uint32_t shift);
-
 	template <class T>
 	Bits& operator<<=	(T shift) {
 		*this = *this << shift;
@@ -58,8 +64,8 @@ public:
 	}
 
 private:
-	uint8_t width;
 	uint32_t bits;
+	Width width;
 };
 
 
