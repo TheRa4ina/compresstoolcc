@@ -25,7 +25,7 @@ TEST(Huffman, getFrequency_empty_EmptyCharFreqMap)
 
 TEST(Huffman, buildDictionary_basicUsage_valid)
 {
-    //nonormal.txt basically, why is it even
+    //nonormal.txt basically
     //also width distribution like in wiki canonical huffman example
     std::stringstream is{ "aaaaaaabbbbbbbbbbcccddd" };
     CharFreqMap freq_map = getFrequency(is);
