@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <cstdint>
 
-// would Width definition be expectable to find here?
+// would Width definition be expectable to found in this file
 typedef uint8_t Width;
 
 class Bits {

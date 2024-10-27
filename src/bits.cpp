@@ -44,7 +44,7 @@ void Bits::setWidth(uint8_t new_width)
 Bits& Bits::operator++()
 {
 	++bits;
-	if (std::has_single_bit(bits) && bits != 1) {
+	if (std::has_single_bit(bits) && std::bit_width(bits)> width) {
 		++width;
 	}
 	return *this;
