@@ -20,6 +20,7 @@ target_link_libraries(AlgosTests
 add_executable(App
 	main.cpp
 	compressor.cpp
+	decompressor.cpp
 )
 target_link_libraries(App PRIVATE Algos)
 target_include_directories(App PRIVATE ${CMAKE_CURRENT_LIST_DIR}/..)

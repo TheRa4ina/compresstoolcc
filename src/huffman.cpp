@@ -44,7 +44,7 @@ namespace huffman {
 
 			++cur_code;
 			if (last_width<current_width) {
-				cur_code <<= current_width - last_width;
+				cur_code <<= current_width - cur_code.getWidth();
 			}
 			dict[ch] = cur_code;
 			last_width = current_width;
@@ -70,9 +70,12 @@ namespace {
 			return {};
 		}
 		std::vector<Node<Frequency>> nodes;
-		for (const auto& pair : char_frequency)
+		for (size_t i=0;i<UINT8_MAX;i++)
 		{
-			nodes.emplace_back(Node<Frequency>(Frequency(pair)));
+			FreqType char_freq = char_frequency[i];
+			if (!char_freq == 0) {
+				nodes.emplace_back(Node<Frequency>(Frequency(i,char_frequency[i])));
+			}
 		}
 		auto comp = [](const Node<Frequency> left, const Node<Frequency> right) {
 			return left.getValue().freq > right.getValue().freq;
