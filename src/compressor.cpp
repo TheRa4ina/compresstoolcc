@@ -3,7 +3,7 @@
 #include <fstream>
 #include <climits>
 
-typedef uint8_t Byte;
+
 constexpr char END_OF_HEADER = '|';
 
 void Compressor::compress(std::istream & input_stream, std::ostream & output_stream)
@@ -35,20 +35,17 @@ void Compressor::writeCompressed(std::istream& is, std::ostream& os)
 	char buffer[CHUNK_SIZE] = { 0 };
 
 	Bits cur_bits;
-	char ch = '\0';
+	uint8_t ch = '\0';
 	while (is.read(buffer, CHUNK_SIZE) || is.gcount() > 0) {
 		std::size_t bytes_read = is.gcount();
 		for (size_t i =0;i<bytes_read;i++)
 		{
-			ch = buffer[i];
+			ch = reinterpret_cast<uint8_t&>(buffer[i]);
+			
 			// https://developercommunity.visualstudio.com/t/c28020-false-positives/923103
 			#pragma warning(suppress: 28020)//size of dict is 256. char will never be >=256
 			Bits char_bits  = dictionary[ch];
-			uint8_t bits_width = char_bits.getWidth();// using max, because 
-																	// std::bit_width(0b0)==0
-																	
-			// keeping track of bit_width by additioning instead of just using std::bit_width
-			// on current because bits mapped to char could start with 0
+			Width bits_width = char_bits.getWidth();
 			cur_bits  <<= bits_width;
 			cur_bits  |=  char_bits.getBits();
 
